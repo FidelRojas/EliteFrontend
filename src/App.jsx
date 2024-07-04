@@ -1,8 +1,14 @@
-import { Button } from "@mui/material";
-import "./App.css";
-import AcUnitIcon from "@mui/icons-material/AcUnit";
+import { RouterProvider, createBrowserRouter } from "react-router-dom"
+import "./App.css"
+import Login from "./pages/Login"
 function App() {
-  return <></>;
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Login />,
+    },
+  ])
+  return <RouterProvider router={router} />
 }
 
-export default App;
+export default App
