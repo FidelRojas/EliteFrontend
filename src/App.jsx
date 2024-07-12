@@ -1,12 +1,12 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import "./App.css"
-import Login from "./pages/Login"
+import PrivateRoutes from "./routes/Private"
+import PublicRoutes from "./routes/Public"
+import { validateToken } from "./utils/auth"
 function App() {
   const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Login />,
-    },
+    validateToken() ? PrivateRoutes() : {},
+    ...PublicRoutes(),
   ])
   return <RouterProvider router={router} />
 }

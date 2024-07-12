@@ -4,13 +4,14 @@ import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   TextField,
-  Button,
   Grid,
   Typography,
   Paper,
   InputAdornment,
   IconButton,
+  Alert,
 } from "@mui/material"
+import LoadingButton from "@mui/lab/LoadingButton"
 import { useForm } from "react-hook-form"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
 import { client } from "../utils/client"
@@ -24,23 +25,29 @@ const Login: React.FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginForm>()
 
   const navigate = useNavigate()
 
   const [showPassword, setShowPassword] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
   const onSubmit = async (data: LoginForm) => {
-    const {
-      data: { token },
-    } = await client.post(LOGIN_PATH, {
-      userName: data.username,
-      password: data.password,
-    })
-    window.localStorage.setItem("token", token)
+    try {
+      setErrorMessage("")
+      const {
+        data: { token },
+      } = await client.post(LOGIN_PATH, {
+        userName: data.username,
+        password: data.password,
+      })
+      window.localStorage.setItem("token", token)
 
-    navigate("/")
+      navigate("/")
+    } catch (error) {
+      setErrorMessage(error?.response?.data?.message ?? "Algo no salio bien")
+    }
   }
 
   const handleTogglePasswordVisibility = () => {
@@ -96,9 +103,20 @@ const Login: React.FC = () => {
                 ),
               }}
             />
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+            {errorMessage && (
+              <Alert sx={{ marginBottom: 1 }} severity="error">
+                {errorMessage}
+              </Alert>
+            )}
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              loading={isSubmitting}
+            >
               Ingresar
-            </Button>
+            </LoadingButton>
           </form>
         </Paper>
       </Grid>
