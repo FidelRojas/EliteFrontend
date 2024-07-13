@@ -1,4 +1,3 @@
-import { client } from "./client"
 import * as jose from "jose"
 
 export const validateToken = () => {

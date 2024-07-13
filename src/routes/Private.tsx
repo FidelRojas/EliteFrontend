@@ -4,7 +4,7 @@ import Layout from "../components/Layout/Layout"
 import React from "react"
 
 const Home = lazy(() =>
-  import("../pages/Home").then(({ Home }) => ({
+  import("../pages/TrucksPage").then(({ TrucksPage: Home }) => ({
     default: Home,
   })),
 )
