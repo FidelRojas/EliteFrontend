@@ -55,7 +55,17 @@ export const CustomTable = ({ fields, fetchData }: CustomTableProps) => {
       }
     }
     fetch()
-  }, [order, orderBy, page, rowsPerPage, search, searchBy])
+  }, [
+    order,
+    orderBy,
+    page,
+    rowsPerPage,
+    search,
+    searchBy,
+    setIsLoading,
+    setData,
+    toast,
+  ])
 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc"
@@ -85,63 +95,59 @@ export const CustomTable = ({ fields, fetchData }: CustomTableProps) => {
         onSubmit={handleSearchChange}
         isLoading={isLoading}
       />
-      <Paper sx={{ marginTop: 2 }}>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {fields.map((field) => (
-                  <TableCell
-                    key={field.value}
-                    sortDirection={orderBy === field.value ? order : false}
+      <TableContainer component={Paper} sx={{ marginTop: 2 }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {fields.map((field) => (
+                <TableCell
+                  key={field.value}
+                  sortDirection={orderBy === field.value ? order : false}
+                >
+                  <TableSortLabel
+                    active={orderBy === field.value}
+                    direction={orderBy === field.value ? order : "asc"}
+                    onClick={() => handleRequestSort(field.value)}
                   >
-                    <TableSortLabel
-                      active={orderBy === field.value}
-                      direction={orderBy === field.value ? order : "asc"}
-                      onClick={() => handleRequestSort(field.value)}
-                    >
-                      {field.label}
-                    </TableSortLabel>
-                  </TableCell>
-                ))}
+                    {field.label}
+                  </TableSortLabel>
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {isLoading ? (
+              <TableRowsLoader
+                rowsNum={rowsPerPage}
+                columsNum={fields.length}
+              />
+            ) : data.length === 0 ? (
+              <TableRow>
+                <TableCell align="center" colSpan={fields.length}>
+                  Tabla vacía
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {isLoading ? (
-                <TableRowsLoader
-                  rowsNum={rowsPerPage}
-                  columsNum={fields.length}
-                />
-              ) : data.length === 0 ? (
-                <TableRow>
-                  <TableCell align="center" colSpan={fields.length}>
-                    Tabla vacía
-                  </TableCell>{" "}
+            ) : (
+              data.map((row) => (
+                <TableRow key={row.id}>
+                  {fields.map((field) => (
+                    <TableCell key={field.value}>{row[field.value]}</TableCell>
+                  ))}
                 </TableRow>
-              ) : (
-                data.map((row) => (
-                  <TableRow key={row.id}>
-                    {fields.map((field) => (
-                      <TableCell key={field.value}>
-                        {row[field.value]}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50]}
-          component="div"
-          count={total}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handlePageChange}
-          onRowsPerPageChange={handleRowsPerPageChange}
-        />
-      </Paper>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 50]}
+        component="div"
+        count={total}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
+      />
     </>
   )
 }

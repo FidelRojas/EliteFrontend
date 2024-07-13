@@ -142,7 +142,15 @@ export default function Layout() {
         <Divider />
         <ItemsSideBar />
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          mt: 8,
+          width: `calc(100% - ${drawerWidth}px)`,
+        }}
+      >
         <Outlet />
       </Box>
     </Box>
