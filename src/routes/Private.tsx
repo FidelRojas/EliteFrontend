@@ -1,6 +1,6 @@
 import { lazy } from "react"
 import { Navigate } from "react-router-dom"
-import Layout from "../components/Layout"
+import Layout from "../components/Layout/Layout"
 import React from "react"
 
 const Home = lazy(() =>

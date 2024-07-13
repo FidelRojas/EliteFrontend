@@ -15,7 +15,7 @@ import LoadingButton from "@mui/lab/LoadingButton"
 import { useForm } from "react-hook-form"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
 import { client } from "../utils/client"
-import { LOGIN_PATH } from "../../constants/endpointsConstants"
+import { LOGIN_PATH } from "../constants/endpointsConstants"
 
 interface LoginForm {
   username: string

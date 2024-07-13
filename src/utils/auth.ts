@@ -1,5 +1,4 @@
 import { client } from "./client"
-import { USER_PATH } from "../../constants/endpointsConstants"
 import * as jose from "jose"
 
 export const validateToken = () => {
