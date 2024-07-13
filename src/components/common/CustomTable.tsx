@@ -9,6 +9,7 @@ import {
   TableSortLabel,
   TablePagination,
   Paper,
+  Grid,
 } from "@mui/material"
 import SearchForm, { SearchFormData } from "./SearchForm"
 import { TableRowsLoader } from "../Layout/TableRowsLoader"
@@ -19,6 +20,8 @@ interface CustomTableProps {
   fields: {
     value: string
     label: string
+    enableSort?: boolean
+    content?: React.ReactNode
   }[]
   fetchData: (data) => Promise<any>
 }
@@ -105,6 +108,7 @@ export const CustomTable = ({ fields, fetchData }: CustomTableProps) => {
                   sortDirection={orderBy === field.value ? order : false}
                 >
                   <TableSortLabel
+                    disabled={field.enableSort}
                     active={orderBy === field.value}
                     direction={orderBy === field.value ? order : "asc"}
                     onClick={() => handleRequestSort(field.value)}
@@ -131,7 +135,9 @@ export const CustomTable = ({ fields, fetchData }: CustomTableProps) => {
               data.map((row) => (
                 <TableRow key={row.id}>
                   {fields.map((field) => (
-                    <TableCell key={field.value}>{row[field.value]}</TableCell>
+                    <TableCell key={field.value}>
+                      {field.content ? field.content : row[field.value]}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))

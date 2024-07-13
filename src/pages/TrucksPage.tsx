@@ -4,7 +4,10 @@ import { client } from "../utils/client"
 import { TRUNK_PATH } from "../constants/endpointsConstants"
 import { Truck } from "../models/models"
 import { CustomTable } from "../components/common/CustomTable"
-import { Typography } from "@mui/material"
+import { Button, Grid, IconButton, Stack, Typography } from "@mui/material"
+import DeleteIcon from "@mui/icons-material/Delete"
+import EditIcon from "@mui/icons-material/Edit"
+import AddIcon from "@mui/icons-material/Add"
 
 interface TrucksResponse {
   data: Truck[]
@@ -18,6 +21,21 @@ export const TrucksPage = () => {
     { value: "year", label: "Año" },
     { value: "type", label: "Tipo" },
     { value: "notes", label: "Notas" },
+    {
+      value: "action",
+      label: "Acciones",
+      enableSort: true,
+      content: (
+        <Stack direction="row" spacing={1}>
+          <IconButton color="primary">
+            <EditIcon />
+          </IconButton>
+          <IconButton>
+            <DeleteIcon />
+          </IconButton>
+        </Stack>
+      ),
+    },
   ]
 
   const fetchData = async (params) => {
@@ -29,9 +47,22 @@ export const TrucksPage = () => {
 
   return (
     <>
-      <Typography variant="h3" marginBottom={4}>
-        Camiones
-      </Typography>
+      <Grid
+        container
+        spacing={2}
+        justifyContent="space-between"
+        alignItems="flex-end"
+        sx={{ mb: 2 }}
+      >
+        <Grid item xs={12} sm={10}>
+          <Typography variant="h3">Camiones</Typography>
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <Button fullWidth variant="contained" endIcon={<AddIcon />}>
+            Añadir
+          </Button>
+        </Grid>
+      </Grid>
       <CustomTable fields={fields} fetchData={fetchData} />
     </>
   )
