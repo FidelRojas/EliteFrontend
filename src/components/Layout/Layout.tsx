@@ -16,6 +16,13 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 import ItemsSideBar from "./ItemsSideBar"
 import { useSelector } from "react-redux"
 import { RootState } from "../../redux/rootReducer"
+import { useAppDispatch } from "../../redux/store"
+import { useEffect } from "react"
+import { client } from "../../utils/client"
+import { USER_PATH } from "../../constants/endpointsConstants"
+import { decodeToken } from "../../utils/auth"
+import { setUser } from "../../redux/userSlice"
+import { toast } from "react-toastify"
 
 const drawerWidth = 240
 
@@ -89,11 +96,32 @@ const Drawer = styled(MuiDrawer, {
 
 export default function Layout() {
   const user = useSelector((state: RootState) => state.user)
+  const token = useSelector((state: RootState) => state.auth.token)
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    if (!user) {
+      fetchUser()
+    }
+  }, [dispatch, user])
+
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
 
   const handleDrawerOpen = () => {
     setOpen(true)
+  }
+
+  const fetchUser = async () => {
+    try {
+      const { id } = decodeToken(token)
+
+      const { data: resp } = await client.get(`${USER_PATH}/${id}`)
+
+      dispatch(setUser(resp?.data))
+    } catch (error) {
+      toast.error(error?.response?.data?.message ?? "Algo no salio bien")
+    }
   }
 
   const handleDrawerClose = () => {
@@ -132,7 +160,7 @@ export default function Layout() {
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            {user.name} {user.lastName}
+            {user?.name} {user?.lastName}
           </Typography>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (

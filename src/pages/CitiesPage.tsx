@@ -1,27 +1,26 @@
 import React, { useState } from "react"
-
 import { client } from "../utils/client"
-import { TRUCK_PATH } from "../constants/endpointsConstants"
+import { CITY_PATH } from "../constants/endpointsConstants"
 import { CustomTable } from "../components/common/CustomTable"
 import { Button, Grid, IconButton, Stack, Typography } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
 import AddIcon from "@mui/icons-material/Add"
-import { Truck } from "../interfaces/truck.interface"
-import TruckForm from "../components/Truck/TruckForm"
+import { City } from "../interfaces/city.interface"
 import { toast } from "react-toastify"
 import { DEFAULT_ERROR } from "../constants/constansts"
 import { useCustomTable } from "../hooks/useCustomTable"
 import { useDialog } from "../context/dialog"
+import CityForm from "../components/City/CityForm"
 
-interface TrucksResponse {
-  data: Truck[]
+interface CitiesResponse {
+  data: City[]
   total: number
 }
 
-export const TrucksPage = () => {
+export const CitiesPage = () => {
   const fetchData = async (params) => {
-    const { data } = await client.get<TrucksResponse>(TRUCK_PATH, {
+    const { data } = await client.get<CitiesResponse>(CITY_PATH, {
       params,
     })
     return data
@@ -31,8 +30,8 @@ export const TrucksPage = () => {
   const tableState = useCustomTable(fetchData)
   const showDialog = useDialog()
 
-  const handleOpen = (truck: Truck = null) => {
-    setInitialData(truck)
+  const handleOpen = (city: City = null) => {
+    setInitialData(city)
     setModalOpen(true)
   }
 
@@ -41,14 +40,14 @@ export const TrucksPage = () => {
     setInitialData(null)
   }
 
-  const handleCreateTruck = async (newTruck: Truck) => {
+  const handleCreateCity = async (newCity: City) => {
     try {
       const {
-        data: { message, data: truck },
-      } = await client.post(TRUCK_PATH, newTruck)
+        data: { message, data: city },
+      } = await client.post(CITY_PATH, newCity)
 
-      setInitialData(newTruck)
-      tableState.setData([...tableState.data, truck])
+      setInitialData(newCity)
+      tableState.setData([...tableState.data, city])
       tableState.setTotal(tableState.total + 1)
       toast.success(message)
       handleClose()
@@ -57,14 +56,14 @@ export const TrucksPage = () => {
     }
   }
 
-  const handleUpdateTruck = async (updateTruck: Truck) => {
+  const handleUpdateCity = async (updateCity: City) => {
     try {
       const {
-        data: { message, data: truck },
-      } = await client.put(`${TRUCK_PATH}/${updateTruck?.id}`, updateTruck)
+        data: { message, data: city },
+      } = await client.put(`${CITY_PATH}/${updateCity?.id}`, updateCity)
 
       const listUpdate = tableState.data.map((item) =>
-        item.id === truck.id ? truck : item,
+        item.id === city.id ? city : item,
       )
 
       tableState.setData(listUpdate)
@@ -76,23 +75,23 @@ export const TrucksPage = () => {
     }
   }
 
-  const handleDelete = async (truck: Truck = null) => {
+  const handleDelete = async (city: City = null) => {
     showDialog({
-      title: "Eliminar camión",
-      body: `¿Deseas eliminar el camión con placa "${truck.plate}"?`,
+      title: "Eliminar Ciudad",
+      body: `¿Deseas eliminar la ciudad "${city.name}"?`,
       confirmLabel: "Eliminar",
       cancelLabel: "Cancelar",
       onConfirm: () => {
         client
-          .delete(`${TRUCK_PATH}/${truck.id}`)
+          .delete(`${CITY_PATH}/${city.id}`)
           .then(() => {
             const newList = tableState.data.filter(
-              (_truck) => _truck.id !== truck.id,
+              (_city) => _city.id !== city.id,
             )
             tableState.setData(newList)
             tableState.setTotal(tableState.total - 1)
 
-            toast.success("Camión eliminado")
+            toast.success("Ciudad eliminada")
           })
           .catch((error) => {
             toast.error(error?.response?.data?.message || DEFAULT_ERROR)
@@ -102,16 +101,12 @@ export const TrucksPage = () => {
   }
 
   const fields = [
-    { value: "plate", label: "Placa" },
-    { value: "brand", label: "Marca" },
-    { value: "year", label: "Año" },
-    { value: "type", label: "Tipo" },
-    { value: "notes", label: "Notas" },
+    { value: "name", label: "Nombre" },
     {
       value: "action",
       label: "Acciones",
       enableSort: true,
-      content: (row: Truck) => (
+      content: (row: City) => (
         <Stack direction="row" spacing={1}>
           <IconButton color="primary" onClick={() => handleOpen(row)}>
             <EditIcon />
@@ -134,7 +129,7 @@ export const TrucksPage = () => {
         sx={{ mb: 2 }}
       >
         <Grid item xs={12} sm={10}>
-          <Typography variant="h3">Camiones</Typography>
+          <Typography variant="h3">Ciudades</Typography>
         </Grid>
         <Grid item xs={12} sm={2}>
           <Button
@@ -148,10 +143,10 @@ export const TrucksPage = () => {
         </Grid>
       </Grid>
       <CustomTable fields={fields} tableState={tableState} />
-      <TruckForm
+      <CityForm
         open={modalOpen}
         onClose={handleClose}
-        onSubmit={initialData ? handleUpdateTruck : handleCreateTruck}
+        onSubmit={initialData ? handleUpdateCity : handleCreateCity}
         initialData={initialData}
       />
     </>

@@ -13,6 +13,7 @@ import Login from "./pages/Login"
 import PrivateRoute from "./routes/Private"
 import { TrucksPage } from "./pages/TrucksPage"
 import Layout from "./components/Layout/Layout"
+import { CitiesPage } from "./pages/CitiesPage"
 
 function App() {
   const isLoggedIn = useSelector(
@@ -43,8 +44,8 @@ function App() {
               element: <TrucksPage />,
             },
             {
-              path: "trucks",
-              element: <TrucksPage />,
+              path: "cities",
+              element: <CitiesPage />,
             },
           ],
         },

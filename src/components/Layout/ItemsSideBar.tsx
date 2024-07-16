@@ -7,8 +7,9 @@ import List from "@mui/material/List"
 import Divider from "@mui/material/Divider"
 import LocalShippingIcon from "@mui/icons-material/LocalShipping"
 import VpnKeyIcon from "@mui/icons-material/VpnKey"
+import PlaceIcon from "@mui/icons-material/Place"
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import ChangePassword from "../User/ChangePassword"
 import { useAppDispatch } from "../../redux/store"
 import { clearToken, setAuthState } from "../../redux/authSlice"
@@ -16,6 +17,7 @@ import { clearToken, setAuthState } from "../../redux/authSlice"
 const ItemsSideBar = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const { pathname } = useLocation()
 
   const [openChangePassword, setOpenChangePassword] = useState(false)
   const handleLogout = () => {
@@ -24,6 +26,7 @@ const ItemsSideBar = () => {
   }
   const FIRST_LIST = [
     { name: "Camiones", icon: <LocalShippingIcon />, to: "/" },
+    { name: "Ciudades", icon: <PlaceIcon />, to: "/cities" },
   ]
   const SECOND_LIST = [
     {
@@ -41,8 +44,14 @@ const ItemsSideBar = () => {
     <>
       <List>
         {FIRST_LIST.map((item, index) => (
-          <ListItem disablePadding sx={{ display: "block" }} key={item.name}>
+          <ListItem
+            disablePadding
+            sx={{ display: "block" }}
+            key={item.name}
+            onClick={() => navigate(item.to)}
+          >
             <ListItemButton
+              selected={item.to === pathname}
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
