@@ -15,61 +15,36 @@ import SearchForm, { SearchFormData } from "./SearchForm"
 import { TableRowsLoader } from "../Layout/TableRowsLoader"
 import { toast } from "react-toastify"
 import { DEFAULT_ERROR } from "../../constants/constansts"
+import { useCustomTableType } from "../../hooks/useCustomTable"
 
 interface CustomTableProps {
   fields: {
     value: string
     label: string
     enableSort?: boolean
-    content?: React.ReactNode
+    content?: (rowsPerPage) => React.ReactNode
   }[]
-  fetchData: (data) => Promise<any>
+  tableState: useCustomTableType
 }
 
-export const CustomTable = ({ fields, fetchData }: CustomTableProps) => {
-  const [order, setOrder] = useState<"asc" | "desc">("asc")
-  const [orderBy, setOrderBy] = useState("")
-  const [page, setPage] = useState(0)
-  const [total, setTotal] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [search, setSearch] = useState("")
-  const [searchBy, setSearchBy] = useState("")
-  const [data, setData] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    async function fetch() {
-      try {
-        setIsLoading(true)
-        const { data, total } = await fetchData({
-          order,
-          orderBy,
-          page,
-          rowsPerPage,
-          search,
-          searchBy,
-        })
-        setData(data ?? [])
-        setTotal(total ?? 0)
-      } catch (error) {
-        toast.error(error?.response?.data?.message ?? DEFAULT_ERROR)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    fetch()
-  }, [
+export const CustomTable = ({
+  fields,
+  tableState: {
+    data,
     order,
     orderBy,
     page,
+    total,
     rowsPerPage,
-    search,
-    searchBy,
-    setIsLoading,
-    setData,
-    toast,
-  ])
-
+    isLoading,
+    setOrder,
+    setOrderBy,
+    setPage,
+    setRowsPerPage,
+    setSearch,
+    setSearchBy,
+  },
+}: CustomTableProps) => {
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc"
     setOrder(isAsc ? "desc" : "asc")
@@ -136,7 +111,7 @@ export const CustomTable = ({ fields, fetchData }: CustomTableProps) => {
                 <TableRow key={row.id}>
                   {fields.map((field) => (
                     <TableCell key={field.value}>
-                      {field.content ? field.content : row[field.value]}
+                      {field.content ? field.content(row) : row[field.value]}
                     </TableCell>
                   ))}
                 </TableRow>

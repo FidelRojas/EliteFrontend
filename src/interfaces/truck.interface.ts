@@ -1,8 +1,8 @@
 export interface Truck {
-  id: number
+  id?: number
   plate: string
   brand: string
-  year: string
+  year: number
   type: string
   notes: string
   status: number

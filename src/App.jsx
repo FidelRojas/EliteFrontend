@@ -6,6 +6,7 @@ import PrivateRoutes from "./routes/Private"
 import PublicRoutes from "./routes/Public"
 import { validateToken } from "./utils/auth"
 import { ToastContainer } from "react-toastify"
+import { AppContextProvider } from "./context/index"
 function App() {
   const router = createBrowserRouter([
     validateToken() ? PrivateRoutes() : {},
@@ -14,8 +15,10 @@ function App() {
   ])
   return (
     <>
-      <ToastContainer />
-      <RouterProvider router={router} />
+      <AppContextProvider>
+        <ToastContainer />
+        <RouterProvider router={router} />
+      </AppContextProvider>
     </>
   )
 }
