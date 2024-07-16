@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import store from "../redux/store"
 
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -9,7 +10,8 @@ export const client = axios.create({
 })
 
 client.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token")
+  const token = store.getState()?.auth?.token
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }

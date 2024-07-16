@@ -1,20 +1,17 @@
-import { lazy } from "react"
-import { Navigate } from "react-router-dom"
-import Layout from "../components/Layout/Layout"
 import React from "react"
+import { useEffect } from "react"
+import { useNavigate, Outlet, Navigate } from "react-router-dom"
 
-const Home = lazy(() =>
-  import("../pages/TrucksPage").then(({ TrucksPage: Home }) => ({
-    default: Home,
-  })),
-)
+const PrivateRoute = ({ isAuth, ...rest }) => {
+  const navigate = useNavigate()
 
-export default function PrivateRoutes() {
-  return {
-    element: <Layout />,
-    children: [
-      { path: "/", element: <Home /> },
-      { path: "*", element: <Navigate to="/" replace /> },
-    ],
-  }
+  useEffect(() => {
+    if (!isAuth) {
+      navigate("/login", { replace: true })
+    }
+  }, [isAuth, navigate])
+
+  return isAuth ? <Outlet /> : <Navigate to="/login" />
 }
+
+export default PrivateRoute

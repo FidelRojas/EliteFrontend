@@ -14,6 +14,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 
 import ItemsSideBar from "./ItemsSideBar"
+import { useSelector } from "react-redux"
+import { RootState } from "../../redux/rootReducer"
 
 const drawerWidth = 240
 
@@ -86,6 +88,7 @@ const Drawer = styled(MuiDrawer, {
 }))
 
 export default function Layout() {
+  const user = useSelector((state: RootState) => state.user)
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
 
@@ -129,7 +132,7 @@ export default function Layout() {
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Elite
+            {user.name} {user.lastName}
           </Typography>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (

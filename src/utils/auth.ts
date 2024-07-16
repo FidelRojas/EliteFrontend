@@ -1,8 +1,6 @@
 import * as jose from "jose"
 
-export const validateToken = () => {
-  const token = localStorage.getItem("token")
-
+export const validateToken = (token) => {
   if (token) {
     try {
       const { id } = decodeToken(token)

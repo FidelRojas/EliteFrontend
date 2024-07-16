@@ -1,10 +1,17 @@
-import { Navigate } from "react-router-dom"
-import Login from "../pages/Login"
 import React from "react"
+import { useEffect } from "react"
+import { useNavigate, Outlet, Navigate } from "react-router-dom"
 
-export default function PublicRoutes() {
-  return [
-    { path: "/login", element: <Login /> },
-    { path: "*", element: <Navigate to="/login" replace /> },
-  ]
+const PublicRoute = ({ isAuth, ...rest }) => {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/", { replace: true })
+    }
+  }, [isAuth, navigate])
+
+  return !isAuth ? <Outlet /> : <Navigate to="/" />
 }
+
+export default PublicRoute

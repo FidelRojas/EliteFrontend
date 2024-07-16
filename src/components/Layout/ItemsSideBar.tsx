@@ -10,14 +10,17 @@ import VpnKeyIcon from "@mui/icons-material/VpnKey"
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined"
 import { useNavigate } from "react-router-dom"
 import ChangePassword from "../User/ChangePassword"
+import { useAppDispatch } from "../../redux/store"
+import { clearToken, setAuthState } from "../../redux/authSlice"
 
 const ItemsSideBar = () => {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const [openChangePassword, setOpenChangePassword] = useState(false)
   const handleLogout = () => {
-    localStorage.removeItem("token")
-    navigate("/login")
+    dispatch(clearToken())
+    dispatch(setAuthState(false))
   }
   const FIRST_LIST = [
     { name: "Camiones", icon: <LocalShippingIcon />, to: "/" },

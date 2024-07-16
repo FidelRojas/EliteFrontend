@@ -15,18 +15,25 @@ import LoadingButton from "@mui/lab/LoadingButton"
 import { useForm } from "react-hook-form"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
 import { client } from "../utils/client"
-import { LOGIN_PATH } from "../constants/endpointsConstants"
+import { LOGIN_PATH, USER_PATH } from "../constants/endpointsConstants"
+import { useAppDispatch } from "../redux/store"
+import { saveToken, setAuthState } from "../redux/authSlice"
+import { setUser } from "../redux/userSlice"
+import { decodeToken } from "../utils/auth"
 
 interface LoginForm {
   username: string
   password: string
 }
 const Login: React.FC = () => {
+  console.log(123)
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginForm>()
+  const dispatch = useAppDispatch()
 
   const navigate = useNavigate()
 
@@ -42,8 +49,14 @@ const Login: React.FC = () => {
         userName: data.username,
         password: data.password,
       })
-      window.localStorage.setItem("token", token)
 
+      const { id } = decodeToken(token)
+      dispatch(saveToken(token))
+
+      const { data: resp } = await client.get(`${USER_PATH}/${id}`)
+
+      dispatch(setUser(resp?.data))
+      dispatch(setAuthState(true))
       navigate("/")
     } catch (error) {
       setErrorMessage(error?.response?.data?.message ?? "Algo no salio bien")
