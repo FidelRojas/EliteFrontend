@@ -20,14 +20,13 @@ import { useAppDispatch } from "../redux/store"
 import { saveToken, setAuthState } from "../redux/authSlice"
 import { setUser } from "../redux/userSlice"
 import { decodeToken } from "../utils/auth"
+import axios from "axios"
 
 interface LoginForm {
   username: string
   password: string
 }
 const Login: React.FC = () => {
-  console.log(123)
-
   const {
     register,
     handleSubmit,
@@ -45,7 +44,7 @@ const Login: React.FC = () => {
       setErrorMessage("")
       const {
         data: { token },
-      } = await client.post(LOGIN_PATH, {
+      } = await axios.post(`${import.meta.env.VITE_API_URL}/${LOGIN_PATH}`, {
         userName: data.username,
         password: data.password,
       })
@@ -90,6 +89,9 @@ const Login: React.FC = () => {
               margin="normal"
               error={!!errors.username}
               helperText={errors.username?.message}
+              inputProps={{
+                autoCapitalize: "none",
+              }}
             />
             <TextField
               {...register("password", {

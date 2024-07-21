@@ -25,5 +25,6 @@ client.interceptors.response.use(
       localStorage.removeItem("token")
       window.location.href = "/"
     }
+    throw error
   },
 )
