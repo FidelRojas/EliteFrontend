@@ -76,8 +76,17 @@ const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
           <Controller
             name="truckId"
             control={control}
+            rules={{
+              required: "Camión requerido",
+            }}
             render={({ field }) => (
-              <Select {...field} value={field?.value || ""} label="Camión">
+              <Select
+                {...field}
+                value={field?.value || ""}
+                required
+                label="Camión"
+                error={!!errors?.truckId}
+              >
                 <MenuItem value="">
                   <em>Ninguno</em>
                 </MenuItem>
@@ -89,15 +98,29 @@ const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
               </Select>
             )}
           />
-          <FormHelperText>Selecciona el camión</FormHelperText>
+          <FormHelperText error={!!errors.truckId}>
+            {errors.truckId?.message}
+          </FormHelperText>
         </FormControl>
         <FormControl fullWidth variant="outlined" margin="normal">
           <InputLabel>Origen</InputLabel>
           <Controller
             name="from"
             control={control}
+            rules={{
+              required: "Oigen requerido",
+            }}
             render={({ field }) => (
-              <Select {...field} value={field?.value || ""} label="Origen">
+              <Select
+                {...field}
+                value={field?.value || ""}
+                required
+                label="Origen"
+                error={!!errors?.from}
+              >
+                <MenuItem value="">
+                  <em>Ninguno</em>
+                </MenuItem>
                 {cities.map((city) => (
                   <MenuItem key={city.id} value={city.id}>
                     {city.name}
@@ -106,7 +129,9 @@ const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
               </Select>
             )}
           />
-          <FormHelperText>Selecciona el origen</FormHelperText>
+          <FormHelperText error={!!errors.from}>
+            {errors.from?.message}
+          </FormHelperText>
         </FormControl>
 
         <FormControl fullWidth variant="outlined" margin="normal">
@@ -114,8 +139,20 @@ const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
           <Controller
             name="to"
             control={control}
+            rules={{
+              required: "Destino requerido",
+            }}
             render={({ field }) => (
-              <Select {...field} value={field?.value || ""} label="Destino">
+              <Select
+                {...field}
+                value={field?.value || ""}
+                required
+                label="Destino"
+                error={!!errors?.to}
+              >
+                <MenuItem value="">
+                  <em>Ninguno</em>
+                </MenuItem>
                 {cities.map((city) => (
                   <MenuItem key={city.id} value={city.id}>
                     {city.name}
@@ -124,7 +161,9 @@ const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
               </Select>
             )}
           />
-          <FormHelperText>Selecciona el destino</FormHelperText>
+          <FormHelperText error={!!errors.to}>
+            {errors.to?.message}
+          </FormHelperText>{" "}
         </FormControl>
 
         <Controller
