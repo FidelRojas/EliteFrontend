@@ -14,6 +14,7 @@ import PrivateRoute from "./routes/Private"
 import { TrucksPage } from "./pages/TrucksPage"
 import Layout from "./components/Layout/Layout"
 import { CitiesPage } from "./pages/CitiesPage"
+import { TravelsPage } from "./pages/TravelsPage"
 
 function App() {
   const isLoggedIn = useSelector(
@@ -41,6 +42,10 @@ function App() {
           children: [
             {
               index: true,
+              element: <TravelsPage />,
+            },
+            {
+              path: 'trucks',
               element: <TrucksPage />,
             },
             {

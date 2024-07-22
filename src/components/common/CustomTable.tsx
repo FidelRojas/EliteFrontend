@@ -109,11 +109,18 @@ export const CustomTable = ({
             ) : (
               data.map((row) => (
                 <TableRow key={row.id}>
-                  {fields.map((field) => (
-                    <TableCell key={field.value}>
-                      {field.content ? field.content(row) : row[field.value]}
-                    </TableCell>
-                  ))}
+                  {fields.map((field) => {
+                    const keys = field.value.split(".")
+                    let result = row
+                    for (const key of keys) {
+                      result = result[key]
+                    }
+                    return (
+                      <TableCell key={field.value}>
+                        {field.content ? field.content(row) : result}
+                      </TableCell>
+                    )
+                  })}
                 </TableRow>
               ))
             )}
