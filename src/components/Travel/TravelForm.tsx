@@ -85,7 +85,7 @@ const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
                 value={field?.value || ""}
                 required
                 label="Camión"
-                error={!!errors?.truckId}
+                error={!!errors?.truckId} 
               >
                 <MenuItem value="">
                   <em>Ninguno</em>
