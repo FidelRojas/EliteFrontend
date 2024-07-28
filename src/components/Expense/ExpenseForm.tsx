@@ -13,7 +13,6 @@ import { LoadingButton } from "@mui/lab"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import moment from "moment"
 import dayjs from "dayjs"
 import { IMaskInput } from "react-imask"
 import { TruckAutoCompleate } from "../Truck/TruckAutoCompleate"
@@ -21,7 +20,7 @@ import { stopPropagate } from "../../utils/utils"
 import { CategoryAutoCompleate } from "../Category/CategoryAutoCompleate"
 
 const defaultValues = {
-  date: moment(),
+  date: new Date(),
   detail: "",
   from: "",
   to: "",
@@ -92,9 +91,7 @@ const ExpenseForm = ({ open, onClose, onSubmit, initialData }) => {
     reset,
     formState: { isSubmitting, errors },
   } = useForm<Expense>({
-    values: initialData
-      ? { ...initialData, date: moment(initialData?.date) }
-      : defaultValues,
+    values: initialData ? initialData : defaultValues,
   })
 
   React.useEffect(() => {
@@ -106,7 +103,6 @@ const ExpenseForm = ({ open, onClose, onSubmit, initialData }) => {
       ...data,
       truckId: data?.truck?.id,
       categoryId: data?.category?.id,
-      date: data?.date.toDate(),
       amountBs: parseFloat(data.amountBs),
       amountSus: parseFloat(data.amountSus),
     }

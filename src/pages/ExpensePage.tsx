@@ -115,8 +115,8 @@ export const ExpensesPage = () => {
     { value: "to", label: "Destino", includeInSearch: true },
     { value: "amountBs", label: "Bs" },
     { value: "amountSus", label: "Sus" },
-    { value: "category.name", label: "Categoría" },
     { value: "truck.plate", label: "Camión" },
+    { value: "category.name", label: "Categoría" },
     { value: "notes", label: "Notas", includeInSearch: true },
 
     {
