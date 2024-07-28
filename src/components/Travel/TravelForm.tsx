@@ -8,28 +8,20 @@ import {
   TextField,
   Button,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormHelperText,
 } from "@mui/material"
 import { Travel } from "../../interfaces/travel.interface"
 import { LoadingButton } from "@mui/lab"
-import { useSelector } from "react-redux"
 const defaultValues = {
   truckId: null,
   form: null,
   to: null,
   notes: "",
 }
-import {
-  fetchTrucks,
-  selectAllTrucks,
-  selectTrucksLoading,
-  selectTrucksError,
-} from "../../redux/truckSlice"
+
 import { useAppDispatch } from "../../redux/store"
-import { fetchCities, selectAllCities } from "../../redux/citySlice"
+import { TruckAutoCompleate } from "../Truck/TruckAutoCompleate"
+import { CityAutoCompleate } from "../City/CityAutoCompleate"
+import { stopPropagate } from "../../utils/utils"
 
 const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
   const {
@@ -42,20 +34,19 @@ const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
   })
 
   const dispatch = useAppDispatch()
-  const trucks = useSelector(selectAllTrucks)
-  const cities = useSelector(selectAllCities)
 
   useEffect(() => {
     reset(initialData)
   }, [initialData, reset])
 
-  useEffect(() => {
-    dispatch(fetchTrucks())
-    dispatch(fetchCities())
-  }, [dispatch])
-
   const _onSubmit = async (data) => {
-    await onSubmit(data)
+    const newData = {
+      ...data,
+      truckId: data?.truck?.id,
+      from: data?.fromCity?.id,
+      to: data?.toCity?.id,
+    }
+    await onSubmit(newData)
     reset()
   }
 
@@ -67,103 +58,63 @@ const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
         component: "form",
         noValidate: true,
       }}
-      onSubmit={handleSubmit(_onSubmit)}
+      onSubmit={stopPropagate(handleSubmit(_onSubmit))}
     >
       <DialogTitle>{initialData ? "Editar Viaje" : "Añadir Viaje"}</DialogTitle>
       <DialogContent>
         <FormControl fullWidth variant="outlined" margin="normal">
-          <InputLabel>Camión</InputLabel>
           <Controller
-            name="truckId"
+            name="truck"
             control={control}
             rules={{
               required: "Camión requerido",
             }}
             render={({ field }) => (
-              <Select
-                {...field}
-                value={field?.value || ""}
-                required
-                label="Camión"
-                error={!!errors?.truckId} 
-              >
-                <MenuItem value="">
-                  <em>Ninguno</em>
-                </MenuItem>
-                {trucks.map((truck) => (
-                  <MenuItem key={truck.id} value={truck.id}>
-                    {truck.plate}
-                  </MenuItem>
-                ))}
-              </Select>
+              <TruckAutoCompleate
+                value={field.value}
+                setValue={field.onChange}
+                error={!!errors?.truck}
+                helperText={errors?.truck?.message}
+              />
             )}
           />
-          <FormHelperText error={!!errors.truckId}>
-            {errors.truckId?.message}
-          </FormHelperText>
         </FormControl>
         <FormControl fullWidth variant="outlined" margin="normal">
-          <InputLabel>Origen</InputLabel>
           <Controller
-            name="from"
+            name="fromCity"
             control={control}
             rules={{
               required: "Oigen requerido",
             }}
             render={({ field }) => (
-              <Select
-                {...field}
-                value={field?.value || ""}
-                required
-                label="Origen"
-                error={!!errors?.from}
-              >
-                <MenuItem value="">
-                  <em>Ninguno</em>
-                </MenuItem>
-                {cities.map((city) => (
-                  <MenuItem key={city.id} value={city.id}>
-                    {city.name}
-                  </MenuItem>
-                ))}
-              </Select>
+              <CityAutoCompleate
+                value={field.value}
+                label="Ciudad Origen"
+                setValue={field.onChange}
+                error={!!errors?.fromCity}
+                helperText={errors?.fromCity?.message}
+              />
             )}
           />
-          <FormHelperText error={!!errors.from}>
-            {errors.from?.message}
-          </FormHelperText>
         </FormControl>
 
         <FormControl fullWidth variant="outlined" margin="normal">
-          <InputLabel>Destino</InputLabel>
           <Controller
-            name="to"
+            name="toCity"
             control={control}
             rules={{
               required: "Destino requerido",
             }}
             render={({ field }) => (
-              <Select
-                {...field}
-                value={field?.value || ""}
-                required
-                label="Destino"
-                error={!!errors?.to}
-              >
-                <MenuItem value="">
-                  <em>Ninguno</em>
-                </MenuItem>
-                {cities.map((city) => (
-                  <MenuItem key={city.id} value={city.id}>
-                    {city.name}
-                  </MenuItem>
-                ))}
-              </Select>
+              <CityAutoCompleate
+                value={field.value}
+                setValue={field.onChange}
+                label="Ciudad Destino"
+                error={!!errors?.toCity}
+                helperText={errors?.toCity?.message}
+              />
             )}
           />
-          <FormHelperText error={!!errors.to}>
-            {errors.to?.message}
-          </FormHelperText>
         </FormControl>
 
         <Controller

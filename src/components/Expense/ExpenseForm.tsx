@@ -231,6 +231,7 @@ const ExpenseForm = ({ open, onClose, onSubmit, initialData }) => {
               <TruckAutoCompleate
                 value={field.value}
                 setValue={field.onChange}
+                margin
               />
             )}
           />
@@ -241,6 +242,7 @@ const ExpenseForm = ({ open, onClose, onSubmit, initialData }) => {
               <CategoryAutoCompleate
                 value={field.value}
                 setValue={field.onChange}
+                margin
               />
             )}
           />

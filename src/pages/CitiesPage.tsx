@@ -144,6 +144,7 @@ export const CitiesPage = () => {
       </Grid>
       <CustomTable fields={fields} tableState={tableState} />
       <CityForm
+        action={initialData ? "Añadir" : "Editar"}
         open={modalOpen}
         onClose={handleClose}
         onSubmit={initialData ? handleUpdateCity : handleCreateCity}
