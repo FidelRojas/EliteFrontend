@@ -13,6 +13,7 @@ import { DEFAULT_ERROR } from "../constants/constansts"
 import { useCustomTable } from "../hooks/useCustomTable"
 import { useDialog } from "../context/dialog"
 import TravelForm from "../components/Travel/TravelForm"
+import moment from "moment"
 
 interface TravelsResponse {
   data: Travel[]
@@ -105,6 +106,22 @@ export const TravelsPage = () => {
     { value: "truck.plate", label: "Camión" },
     { value: "fromCity.name", label: "Origen" },
     { value: "toCity.name", label: "Destino" },
+    {
+      value: "departureDate",
+      label: "Fecha Salida",
+      content: (row: Travel) =>
+        row.departureDate
+          ? moment(row.departureDate).format("DD-MM-YYYY hh:mm")
+          : "",
+    },
+    {
+      value: "arrivalDate",
+      label: "Fecha Llegada",
+      content: (row: Travel) =>
+        row.arrivalDate
+          ? moment(row.arrivalDate).format("DD-MM-YYYY hh:mm")
+          : "",
+    },
     { value: "notes", label: "Notas", includeInSearch: true },
     {
       value: "action",

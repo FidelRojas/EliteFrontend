@@ -16,12 +16,17 @@ const defaultValues = {
   form: null,
   to: null,
   notes: "",
+  departureDate: null,
+  arrivalDate: null,
 }
 
 import { useAppDispatch } from "../../redux/store"
 import { TruckAutoCompleate } from "../Truck/TruckAutoCompleate"
 import { CityAutoCompleate } from "../City/CityAutoCompleate"
 import { stopPropagate } from "../../utils/utils"
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers"
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import dayjs from "dayjs"
 
 const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
   const {
@@ -62,75 +67,120 @@ const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
     >
       <DialogTitle>{initialData ? "Editar Viaje" : "Añadir Viaje"}</DialogTitle>
       <DialogContent>
-        <FormControl fullWidth variant="outlined" margin="normal">
-          <Controller
-            name="truck"
-            control={control}
-            rules={{
-              required: "Camión requerido",
-            }}
-            render={({ field }) => (
-              <TruckAutoCompleate
-                value={field.value}
-                setValue={field.onChange}
-                error={!!errors?.truck}
-                helperText={errors?.truck?.message}
-              />
-            )}
-          />
-        </FormControl>
-        <FormControl fullWidth variant="outlined" margin="normal">
-          <Controller
-            name="fromCity"
-            control={control}
-            rules={{
-              required: "Oigen requerido",
-            }}
-            render={({ field }) => (
-              <CityAutoCompleate
-                value={field.value}
-                label="Ciudad Origen"
-                setValue={field.onChange}
-                error={!!errors?.fromCity}
-                helperText={errors?.fromCity?.message}
-              />
-            )}
-          />
-        </FormControl>
-
-        <FormControl fullWidth variant="outlined" margin="normal">
-          <Controller
-            name="toCity"
-            control={control}
-            rules={{
-              required: "Destino requerido",
-            }}
-            render={({ field }) => (
-              <CityAutoCompleate
-                value={field.value}
-                setValue={field.onChange}
-                label="Ciudad Destino"
-                error={!!errors?.toCity}
-                helperText={errors?.toCity?.message}
-              />
-            )}
-          />
-        </FormControl>
-
-        <Controller
-          name="notes"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="Notas"
-              fullWidth
-              margin="normal"
-              multiline
-              rows={2}
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <FormControl fullWidth variant="outlined" margin="normal">
+            <Controller
+              name="truck"
+              control={control}
+              rules={{
+                required: "Camión requerido",
+              }}
+              render={({ field }) => (
+                <TruckAutoCompleate
+                  value={field.value}
+                  setValue={field.onChange}
+                  error={!!errors?.truck}
+                  helperText={errors?.truck?.message}
+                />
+              )}
             />
-          )}
-        />
+          </FormControl>
+          <FormControl fullWidth variant="outlined" margin="normal">
+            <Controller
+              name="fromCity"
+              control={control}
+              rules={{
+                required: "Oigen requerido",
+              }}
+              render={({ field }) => (
+                <CityAutoCompleate
+                  value={field.value}
+                  label="Ciudad Origen"
+                  setValue={field.onChange}
+                  error={!!errors?.fromCity}
+                  helperText={errors?.fromCity?.message}
+                />
+              )}
+            />
+          </FormControl>
+
+          <FormControl fullWidth variant="outlined" margin="normal">
+            <Controller
+              name="toCity"
+              control={control}
+              rules={{
+                required: "Destino requerido",
+              }}
+              render={({ field }) => (
+                <CityAutoCompleate
+                  value={field.value}
+                  setValue={field.onChange}
+                  label="Ciudad Destino"
+                  error={!!errors?.toCity}
+                  helperText={errors?.toCity?.message}
+                />
+              )}
+            />
+          </FormControl>
+          <Controller
+            control={control}
+            name="departureDate"
+            render={({ field }) => (
+              <DateTimePicker
+                onChange={(date) => field.onChange(date)}
+                defaultValue={field.value ? dayjs(field.value) : null}
+                label="Fecha de Salida"
+                slotProps={{
+                  textField: {
+                    required: true,
+                    fullWidth: true,
+                    sx: { marginTop: 1 },
+                    variant: "outlined",
+                    error: !!errors.departureDate,
+                    helperText: errors.departureDate?.message,
+                  },
+                }}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="arrivalDate"
+            render={({ field }) => (
+              <DateTimePicker
+                onChange={(date) => field.onChange(date)}
+                defaultValue={field.value ? dayjs(field.value) : null}
+                label="Fecha de Llegada"
+                slotProps={{
+                  textField: {
+                    required: true,
+                    fullWidth: true,
+                    sx: { marginTop: 1 },
+                    variant: "outlined",
+                    error: !!errors.arrivalDate,
+                    helperText: errors.arrivalDate?.message,
+                  },
+                }}
+              />
+            )}
+          />
+
+          <Controller
+            name="notes"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Notas"
+                fullWidth
+                margin="normal"
+                multiline
+                rows={2}
+              />
+            )}
+          />
+        </LocalizationProvider>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>
