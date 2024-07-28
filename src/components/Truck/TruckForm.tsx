@@ -10,6 +10,7 @@ import {
 } from "@mui/material"
 import { Truck } from "../../interfaces/truck.interface"
 import { LoadingButton } from "@mui/lab"
+import { stopPropagate } from "../../utils/utils"
 const defaultValues = {
   plate: "",
   brand: "",
@@ -17,7 +18,7 @@ const defaultValues = {
   type: "",
   notes: "",
 }
-const TruckForm = ({ open, onClose, onSubmit, initialData }) => {
+const TruckForm = ({ open, onClose, onSubmit, initialData, action }) => {
   const {
     control,
     handleSubmit,
@@ -44,11 +45,9 @@ const TruckForm = ({ open, onClose, onSubmit, initialData }) => {
         component: "form",
         noValidate: true,
       }}
-      onSubmit={handleSubmit(_onSubmit)}
+      onSubmit={stopPropagate(handleSubmit(_onSubmit))}
     >
-      <DialogTitle>
-        {initialData ? "Editar Camión" : "Añadir Camión"}
-      </DialogTitle>
+      <DialogTitle>{`${action} Camión`}</DialogTitle>
       <DialogContent>
         <Controller
           name="plate"
@@ -106,7 +105,7 @@ const TruckForm = ({ open, onClose, onSubmit, initialData }) => {
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>
         <LoadingButton loading={isSubmitting} type="submit" variant="contained">
-          {initialData ? "Editar" : "Añadir"}
+          {action}
         </LoadingButton>
       </DialogActions>
     </Dialog>

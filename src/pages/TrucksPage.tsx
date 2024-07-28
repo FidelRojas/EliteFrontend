@@ -149,6 +149,7 @@ export const TrucksPage = () => {
       </Grid>
       <CustomTable fields={fields} tableState={tableState} />
       <TruckForm
+        action={initialData ? "Añadir" : "Editar"}
         open={modalOpen}
         onClose={handleClose}
         onSubmit={initialData ? handleUpdateTruck : handleCreateTruck}
