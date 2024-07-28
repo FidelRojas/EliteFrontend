@@ -111,7 +111,7 @@ export const TravelsPage = () => {
       label: "Fecha Salida",
       content: (row: Travel) =>
         row.departureDate
-          ? moment(row.departureDate).format("DD-MM-YYYY hh:mm")
+          ? moment(row.departureDate).format("DD-MM-YY hh:mm")
           : "",
     },
     {
@@ -119,7 +119,7 @@ export const TravelsPage = () => {
       label: "Fecha Llegada",
       content: (row: Travel) =>
         row.arrivalDate
-          ? moment(row.arrivalDate).format("DD-MM-YYYY hh:mm")
+          ? moment(row.arrivalDate).format("DD-MM-YY hh:mm")
           : "",
     },
     { value: "notes", label: "Notas", includeInSearch: true },
