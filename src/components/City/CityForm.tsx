@@ -10,10 +10,11 @@ import {
 } from "@mui/material"
 import { City } from "../../interfaces/city.interface"
 import { LoadingButton } from "@mui/lab"
+import { stopPropagate } from "../../utils/utils"
 const defaultValues = {
   name: "",
 }
-const CityForm = ({ open, onClose, onSubmit, initialData }) => {
+const CityForm = ({ open, onClose, onSubmit, initialData, action }) => {
   const {
     control,
     handleSubmit,
@@ -40,11 +41,9 @@ const CityForm = ({ open, onClose, onSubmit, initialData }) => {
         component: "form",
         noValidate: true,
       }}
-      onSubmit={handleSubmit(_onSubmit)}
+      onSubmit={stopPropagate(handleSubmit(_onSubmit))}
     >
-      <DialogTitle>
-        {initialData ? "Editar Ciudad" : "Añadir Ciudad"}
-      </DialogTitle>
+      <DialogTitle>{`${action} Ciudad`}</DialogTitle>
       <DialogContent>
         <Controller
           name="name"
@@ -68,7 +67,7 @@ const CityForm = ({ open, onClose, onSubmit, initialData }) => {
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>
         <LoadingButton loading={isSubmitting} type="submit" variant="contained">
-          {initialData ? "Editar" : "Añadir"}
+          {action}
         </LoadingButton>
       </DialogActions>
     </Dialog>

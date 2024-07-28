@@ -15,7 +15,7 @@ import { useAppDispatch } from "../../redux/store"
 
 const filter = createFilterOptions<CategoryOptionType>()
 
-export const CategoryAutoCompleate = ({ value, setValue }) => {
+export const CategoryAutoCompleate = ({ value, setValue, margin = false }) => {
   const [modalOpen, setModalOpen] = useState(false)
   const [initialData, setInitialData] = useState(null)
   const [categories, setCategories] = useState([])
@@ -49,7 +49,7 @@ export const CategoryAutoCompleate = ({ value, setValue }) => {
     }
   }
   return (
-    <Box sx={{ marginTop: 3, marginBottom: 2 }}>
+    <Box sx={margin ? { marginTop: 3, marginBottom: 2 } : {}}>
       <CategoryForm
         action="Añadir"
         open={modalOpen}

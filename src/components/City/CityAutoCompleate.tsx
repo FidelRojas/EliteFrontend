@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
-import TruckForm from "./TruckForm"
-import { Truck } from "../../interfaces/truck.interface"
-import { TRUCK_PATH } from "../../constants/endpointsConstants"
+import CityForm from "../City/CityForm"
+import { City } from "../../interfaces/city.interface"
+import { CITY_PATH } from "../../constants/endpointsConstants"
 import { client } from "../../utils/client"
 import { toast } from "react-toastify"
 import {
@@ -10,42 +10,41 @@ import {
   createFilterOptions,
   TextField,
 } from "@mui/material"
-import { useSelector } from "react-redux"
-import { fetchTrucks, selectAllTrucks } from "../../redux/truckSlice"
-import { useAppDispatch } from "../../redux/store"
 
-const filter = createFilterOptions<TruckOptionType>()
+const filter = createFilterOptions<CityOptionType>()
 
-export const TruckAutoCompleate = ({
+export const CityAutoCompleate = ({
   value,
   setValue,
-  error = false,
   helperText = "",
+  label = "Ciudad",
+  error = false,
   margin = false,
 }) => {
-  //   const [value, setValue] = React.useState<TruckOptionType | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [initialData, setInitialData] = useState(null)
+  const [cities, setCities] = useState([])
 
-  const trucks = useSelector(selectAllTrucks) as readonly TruckOptionType[]
-
-  const dispatch = useAppDispatch()
+  const fetchData = async () => {
+    const { data } = await client.get(CITY_PATH)
+    setCities(data.data)
+  }
 
   useEffect(() => {
-    dispatch(fetchTrucks())
-  }, [dispatch])
+    fetchData()
+  }, [])
 
   const handleClose = () => {
     setModalOpen(false)
     setInitialData(null)
   }
-  const handleCreateTruck = async (newTruck: Truck) => {
+  const handleCreateCity = async (newCity: City) => {
     try {
       const {
-        data: { message, data: truck },
-      } = await client.post(TRUCK_PATH, newTruck)
+        data: { message, data: city },
+      } = await client.post(CITY_PATH, newCity)
 
-      setValue(truck)
+      setValue(city)
       toast.success(message)
       handleClose()
       return
@@ -55,36 +54,27 @@ export const TruckAutoCompleate = ({
   }
   return (
     <Box sx={margin ? { marginTop: 3, marginBottom: 2 } : {}}>
-      <TruckForm
+      <CityForm
+        action="Añadir"
         open={modalOpen}
         onClose={handleClose}
-        onSubmit={handleCreateTruck}
+        onSubmit={handleCreateCity}
         initialData={initialData}
-        action="Añadir"
       />
       <Autocomplete
         value={value}
         onChange={(event, newValue) => {
           if (typeof newValue === "string") {
-            // timeout to avoid instant validation of the dialog's form.
             setTimeout(() => {
               setModalOpen(true)
               setInitialData({
-                plate: newValue,
-                brand: "",
-                year: 2010,
-                type: "",
-                notes: "",
+                name: newValue,
               })
             })
           } else if (newValue && newValue.inputValue) {
             setModalOpen(true)
             setInitialData({
-              plate: newValue.inputValue,
-              brand: "",
-              year: 2010,
-              type: "",
-              notes: "",
+              name: newValue.inputValue,
             })
           } else {
             setValue(newValue)
@@ -96,13 +86,13 @@ export const TruckAutoCompleate = ({
           if (params.inputValue !== "") {
             filtered.push({
               inputValue: params.inputValue,
-              plate: `Añadir "${params.inputValue}"`,
+              name: `Añadir "${params.inputValue}"`,
             })
           }
 
           return filtered
         }}
-        options={trucks}
+        options={cities}
         getOptionLabel={(option) => {
           if (typeof option === "string") {
             return option
@@ -110,7 +100,7 @@ export const TruckAutoCompleate = ({
           if (option.inputValue) {
             return option.inputValue
           }
-          return option.plate
+          return option.name
         }}
         selectOnFocus
         clearOnBlur
@@ -118,8 +108,8 @@ export const TruckAutoCompleate = ({
         renderOption={(props, option) => {
           const { key, ...optionProps } = props
           return (
-            <li key={option.plate || key} {...optionProps}>
-              {option.plate}
+            <li key={option.name || key} {...optionProps}>
+              {option.name}
             </li>
           )
         }}
@@ -128,7 +118,7 @@ export const TruckAutoCompleate = ({
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Placa Camión"
+            label={label}
             error={error}
             helperText={helperText}
           />
@@ -138,7 +128,7 @@ export const TruckAutoCompleate = ({
   )
 }
 
-interface TruckOptionType {
+interface CityOptionType {
   inputValue?: string
-  plate: string
+  name: string
 }
