@@ -132,7 +132,6 @@ const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
                 label="Fecha de Salida"
                 slotProps={{
                   textField: {
-                    required: true,
                     fullWidth: true,
                     sx: { marginTop: 1 },
                     variant: "outlined",
@@ -154,7 +153,6 @@ const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
                 label="Fecha de Llegada"
                 slotProps={{
                   textField: {
-                    required: true,
                     fullWidth: true,
                     sx: { marginTop: 1 },
                     variant: "outlined",
