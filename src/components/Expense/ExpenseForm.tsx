@@ -137,7 +137,6 @@ const ExpenseForm = ({ open, onClose, onSubmit, initialData }) => {
                 onChange={(date) => field.onChange(date)}
                 defaultValue={dayjs(field.value as Date)}
                 label="Fecha"
-                disablePast
                 slotProps={{
                   textField: {
                     required: true,

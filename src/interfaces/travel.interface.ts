@@ -9,6 +9,8 @@ export interface Travel {
   fromCity: City
   to: number
   toCity: City
+  arrivalDate: Date
+  departureDate: Date
   notes: string
   status: number
   createdAt: Date
