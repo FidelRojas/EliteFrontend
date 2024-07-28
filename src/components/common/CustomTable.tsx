@@ -21,6 +21,7 @@ interface CustomTableProps {
   fields: {
     value: string
     label: string
+    includeInSearch?: boolean
     enableSort?: boolean
     content?: (rowsPerPage) => React.ReactNode
   }[]
@@ -113,7 +114,7 @@ export const CustomTable = ({
                     const keys = field.value.split(".")
                     let result = row
                     for (const key of keys) {
-                      result = result[key]
+                      result = result ? result[key] : ""
                     }
                     return (
                       <TableCell key={field.value}>

@@ -1,13 +1,15 @@
 import React from "react"
 import { useForm, Controller } from "react-hook-form"
-import { TextField, MenuItem, Button, Grid, Paper } from "@mui/material"
+import { TextField, MenuItem, Grid } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
 import SearchIcon from "@mui/icons-material/Search"
+
 interface SearchFormProps {
   onSubmit: (data: SearchFormData) => void
   fields: {
     value: string
     label: string
+    includeInSearch?: boolean
   }[]
   isLoading: boolean
 }
@@ -51,7 +53,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
               variant="outlined"
               fullWidth
               error={!!errors.search}
-              helperText={errors.search ? errors.search.message : ""}
+              helperText={errors.search ? String(errors.search.message) : ""}
             />
           )}
         />
@@ -78,16 +80,18 @@ const SearchForm: React.FC<SearchFormProps> = ({
               variant="outlined"
               fullWidth
               error={!!errors.field}
-              helperText={errors.field ? errors.field.message : ""}
+              helperText={errors.field ? String(errors.field.message) : ""}
             >
               <MenuItem value="">
                 <em>Ninguno</em>
               </MenuItem>
-              {fields.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
+              {fields
+                .filter((field) => field.includeInSearch)
+                .map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
             </TextField>
           )}
         />

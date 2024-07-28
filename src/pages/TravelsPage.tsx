@@ -105,7 +105,7 @@ export const TravelsPage = () => {
     { value: "truck.plate", label: "Camion" },
     { value: "fromCity.name", label: "Origen" },
     { value: "toCity.name", label: "Destino" },
-    { value: "notes", label: "Notas" },
+    { value: "notes", label: "Notas", includeInSearch: true },
     {
       value: "action",
       label: "Acciones",

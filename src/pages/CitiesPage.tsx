@@ -101,7 +101,7 @@ export const CitiesPage = () => {
   }
 
   const fields = [
-    { value: "name", label: "Nombre" },
+    { value: "name", label: "Nombre", includeInSearch: true },
     {
       value: "action",
       label: "Acciones",
