@@ -102,11 +102,11 @@ export const TrucksPage = () => {
   }
 
   const fields = [
-    { value: "plate", label: "Placa" },
-    { value: "brand", label: "Marca" },
-    { value: "year", label: "Año" },
-    { value: "type", label: "Tipo" },
-    { value: "notes", label: "Notas" },
+    { value: "plate", label: "Placa", includeInSearch: true },
+    { value: "brand", label: "Marca", includeInSearch: true },
+    { value: "year", label: "Año", includeInSearch: true },
+    { value: "type", label: "Tipo", includeInSearch: true },
+    { value: "notes", label: "Notas", includeInSearch: true },
     {
       value: "action",
       label: "Acciones",
@@ -149,6 +149,7 @@ export const TrucksPage = () => {
       </Grid>
       <CustomTable fields={fields} tableState={tableState} />
       <TruckForm
+        action={initialData ? "Añadir" : "Editar"}
         open={modalOpen}
         onClose={handleClose}
         onSubmit={initialData ? handleUpdateTruck : handleCreateTruck}

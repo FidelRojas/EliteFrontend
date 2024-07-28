@@ -8,8 +8,10 @@ import Divider from "@mui/material/Divider"
 import LocalShippingIcon from "@mui/icons-material/LocalShipping"
 import VpnKeyIcon from "@mui/icons-material/VpnKey"
 import PlaceIcon from "@mui/icons-material/Place"
-import RouteIcon from '@mui/icons-material/Route';
+import RouteIcon from "@mui/icons-material/Route"
 import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined"
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney"
+import PaymentsIcon from "@mui/icons-material/Payments"
 import { useLocation, useNavigate } from "react-router-dom"
 import ChangePassword from "../User/ChangePassword"
 import { useAppDispatch } from "../../redux/store"
@@ -29,6 +31,8 @@ const ItemsSideBar = () => {
     { name: "Viajes", icon: <RouteIcon />, to: "/" },
     { name: "Camiones", icon: <LocalShippingIcon />, to: "/trucks" },
     { name: "Ciudades", icon: <PlaceIcon />, to: "/cities" },
+    { name: "Gastos", icon: <AttachMoneyIcon />, to: "/expenses" },
+    { name: "Categorias de Gastos", icon: <PaymentsIcon />, to: "/categories" },
   ]
   const SECOND_LIST = [
     {

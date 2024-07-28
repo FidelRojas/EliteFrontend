@@ -163,7 +163,7 @@ const TravelForm = ({ open, onClose, onSubmit, initialData }) => {
           />
           <FormHelperText error={!!errors.to}>
             {errors.to?.message}
-          </FormHelperText>{" "}
+          </FormHelperText>
         </FormControl>
 
         <Controller

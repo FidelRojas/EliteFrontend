@@ -15,6 +15,8 @@ import { TrucksPage } from "./pages/TrucksPage"
 import Layout from "./components/Layout/Layout"
 import { CitiesPage } from "./pages/CitiesPage"
 import { TravelsPage } from "./pages/TravelsPage"
+import { ExpensesPage } from "./pages/ExpensePage"
+import { CategoriesPage } from "./pages/CategoriesPage"
 
 function App() {
   const isLoggedIn = useSelector(
@@ -45,12 +47,20 @@ function App() {
               element: <TravelsPage />,
             },
             {
-              path: 'trucks',
+              path: "trucks",
               element: <TrucksPage />,
             },
             {
               path: "cities",
               element: <CitiesPage />,
+            },
+            {
+              path: "expenses",
+              element: <ExpensesPage />,
+            },
+            {
+              path: "categories",
+              element: <CategoriesPage />,
             },
           ],
         },

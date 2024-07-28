@@ -69,7 +69,7 @@ const DialogProvider: React.FC<{ children: React.ReactNode }> = ({
         <DialogActions>
           <Button onClick={handleCancel}>{options.cancelLabel}</Button>
           <Button onClick={handleConfirm} variant="contained" autoFocus>
-            {options.confirmLabel}{" "}
+            {options.confirmLabel}
           </Button>
         </DialogActions>
       </Dialog>

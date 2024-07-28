@@ -1,27 +1,26 @@
 import React, { useState } from "react"
-
 import { client } from "../utils/client"
-import { TRAVEL_PATH } from "../constants/endpointsConstants"
+import { CATEGORY_PATH } from "../constants/endpointsConstants"
 import { CustomTable } from "../components/common/CustomTable"
 import { Button, Grid, IconButton, Stack, Typography } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
 import AddIcon from "@mui/icons-material/Add"
-import { Travel } from "../interfaces/travel.interface"
+import { Category } from "../interfaces/category.interface"
 import { toast } from "react-toastify"
 import { DEFAULT_ERROR } from "../constants/constansts"
 import { useCustomTable } from "../hooks/useCustomTable"
 import { useDialog } from "../context/dialog"
-import TravelForm from "../components/Travel/TravelForm"
+import CategoryForm from "../components/Category/CategoryForm"
 
-interface TravelsResponse {
-  data: Travel[]
+interface CategoriesResponse {
+  data: Category[]
   total: number
 }
 
-export const TravelsPage = () => {
+export const CategoriesPage = () => {
   const fetchData = async (params) => {
-    const { data } = await client.get<TravelsResponse>(TRAVEL_PATH, {
+    const { data } = await client.get<CategoriesResponse>(CATEGORY_PATH, {
       params,
     })
     return data
@@ -31,8 +30,8 @@ export const TravelsPage = () => {
   const tableState = useCustomTable(fetchData)
   const showDialog = useDialog()
 
-  const handleOpen = (travel: Travel = null) => {
-    setInitialData(travel)
+  const handleOpen = (category: Category = null) => {
+    setInitialData(category)
     setModalOpen(true)
   }
 
@@ -41,14 +40,14 @@ export const TravelsPage = () => {
     setInitialData(null)
   }
 
-  const handleCreateTravel = async (newTravel: Travel) => {
+  const handleCreateCategory = async (newCategory: Category) => {
     try {
       const {
-        data: { message, data: travel },
-      } = await client.post(TRAVEL_PATH, newTravel)
+        data: { message, data: category },
+      } = await client.post(CATEGORY_PATH, newCategory)
 
-      setInitialData(newTravel)
-      tableState.setData([...tableState.data, travel])
+      setInitialData(newCategory)
+      tableState.setData([...tableState.data, category])
       tableState.setTotal(tableState.total + 1)
       toast.success(message)
       handleClose()
@@ -57,14 +56,17 @@ export const TravelsPage = () => {
     }
   }
 
-  const handleUpdateTravel = async (updateTravel: Travel) => {
+  const handleUpdateCategory = async (updateCategory: Category) => {
     try {
       const {
-        data: { message, data: travel },
-      } = await client.put(`${TRAVEL_PATH}/${updateTravel?.id}`, updateTravel)
+        data: { message, data: category },
+      } = await client.put(
+        `${CATEGORY_PATH}/${updateCategory?.id}`,
+        updateCategory,
+      )
 
       const listUpdate = tableState.data.map((item) =>
-        item.id === travel.id ? travel : item,
+        item.id === category.id ? category : item,
       )
 
       tableState.setData(listUpdate)
@@ -76,23 +78,23 @@ export const TravelsPage = () => {
     }
   }
 
-  const handleDelete = async (travel: Travel = null) => {
+  const handleDelete = async (category: Category = null) => {
     showDialog({
-      title: "Eliminar Viaje",
-      body: `¿Deseas eliminar el viaje del camión "${travel.truckId}"?`,
+      title: "Eliminar Categoría",
+      body: `¿Deseas eliminar la categoría "${category.name}"?`,
       confirmLabel: "Eliminar",
       cancelLabel: "Cancelar",
       onConfirm: () => {
         client
-          .delete(`${TRAVEL_PATH}/${travel.id}`)
+          .delete(`${CATEGORY_PATH}/${category.id}`)
           .then(() => {
             const newList = tableState.data.filter(
-              (_travel) => _travel.id !== travel.id,
+              (_category) => _category.id !== category.id,
             )
             tableState.setData(newList)
             tableState.setTotal(tableState.total - 1)
 
-            toast.success("Viaje eliminado")
+            toast.success("Categoría eliminada")
           })
           .catch((error) => {
             toast.error(error?.response?.data?.message || DEFAULT_ERROR)
@@ -102,15 +104,12 @@ export const TravelsPage = () => {
   }
 
   const fields = [
-    { value: "truck.plate", label: "Camión" },
-    { value: "fromCity.name", label: "Origen" },
-    { value: "toCity.name", label: "Destino" },
-    { value: "notes", label: "Notas", includeInSearch: true },
+    { value: "name", label: "Nombre", includeInSearch: true },
     {
       value: "action",
       label: "Acciones",
       enableSort: true,
-      content: (row: Travel) => (
+      content: (row: Category) => (
         <Stack direction="row" spacing={1}>
           <IconButton color="primary" onClick={() => handleOpen(row)}>
             <EditIcon />
@@ -133,7 +132,7 @@ export const TravelsPage = () => {
         sx={{ mb: 2 }}
       >
         <Grid item xs={12} sm={10}>
-          <Typography variant="h3">Viajes</Typography>
+          <Typography variant="h3">Categorías</Typography>
         </Grid>
         <Grid item xs={12} sm={2}>
           <Button
@@ -147,14 +146,13 @@ export const TravelsPage = () => {
         </Grid>
       </Grid>
       <CustomTable fields={fields} tableState={tableState} />
-      {modalOpen && (
-        <TravelForm
-          open={modalOpen}
-          onClose={handleClose}
-          onSubmit={initialData ? handleUpdateTravel : handleCreateTravel}
-          initialData={initialData}
-        />
-      )}
+      <CategoryForm
+        open={modalOpen}
+        onClose={handleClose}
+        onSubmit={initialData ? handleUpdateCategory : handleCreateCategory}
+        initialData={initialData}
+        action={initialData ? "Añadir" : "Editar"}
+      />
     </>
   )
 }
